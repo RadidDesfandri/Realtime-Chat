@@ -1,11 +1,14 @@
 "use client";
 
+import axios from "axios";
 import Button from "@/app/component/Button";
 import Input from "@/app/component/inputs/Input";
 import { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import AuthSocialButton from "./AuthSocialButton";
 import { BsGithub, BsGoogle } from "react-icons/bs";
+import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -38,18 +41,50 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if (variant === "REGISTER") {
-      // Axios api register
+      axios
+        .post("/api/register", data)
+        .then((res) => {})
+        .catch((error) => {
+          if (error.response && error.response.data) {
+            toast.error(error.response.data);
+          } else {
+            toast.error("Something went wrong!");
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
 
     if (variant === "LOGIN") {
-      // Nect auth sign in
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((res) => {
+          if (res?.error) {
+            toast.error(res.error);
+          }
+
+          if (res?.ok && !res.error) {
+            toast.success("Login succes!");
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
   };
 
   const socialAction = (action: string) => {
     setIsLoading(true);
+    signIn(action, { redirect: false })
+      .then((res) => {
+        if (res?.error) {
+          toast.error(res.error);
+        }
 
-    // Action sign in social
+        if (res?.ok && !res.error) {
+          toast.success("Login succes!");
+        }
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -125,7 +160,7 @@ const AuthForm = () => {
             {variant === "LOGIN" ? "Create an account" : "Login"}
           </div>
         </div>
-      </div>    
+      </div>
     </div>
   );
 };
