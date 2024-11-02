@@ -8,12 +8,18 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors:{
+      colors: {
         light: "#F7F7F7",
-        dark: "#100303"
-      }
+        dark: "#100303",
+        main: "#229799",
+        mainDark: "#0B8494",
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/forms")({
+      strategy: "class",
+    }),
+  ],
 };
 export default config;
