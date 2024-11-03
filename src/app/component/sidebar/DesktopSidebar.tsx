@@ -14,8 +14,6 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
   const routes = useRoutes();
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log({ currentUser }, "desktop");
-
   return (
     <div className="hidden justify-between border-r-[1px] lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:w-20 lg:flex-col lg:overflow-y-auto lg:bg-white lg:pb-4 xl:px-4">
       <nav className="mt-4 flex flex-col justify-between">
