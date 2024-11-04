@@ -22,7 +22,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   return (
     <aside
       className={clsx(
-        `fixed inset-y-0 overflow-y-auto border-r border-gray-200 pb-20 lg:left-20 lg:w-80 lg:pb-0`,
+        `fixed inset-y-0 overflow-y-auto border-r border-gray-200 pb-20 lg:left-20 lg:block lg:w-80 lg:pb-0`,
         isOpen ? "hidden" : "left-0 block w-full",
       )}
     >
@@ -33,13 +33,15 @@ const ConversationList: React.FC<ConversationListProps> = ({
             <MdOutlineGroupAdd size={20} />
           </div>
         </div>
-        {items.map((item) => (
-          <ConversationBox
-            key={item.id}
-            data={item}
-            selected={conversationId === item.id}
-          />
-        ))}
+        <div className="space-y-2">
+          {items.map((item) => (
+            <ConversationBox
+              key={item.id}
+              data={item}
+              selected={conversationId === item.id}
+            />
+          ))}
+        </div>
       </div>
     </aside>
   );
