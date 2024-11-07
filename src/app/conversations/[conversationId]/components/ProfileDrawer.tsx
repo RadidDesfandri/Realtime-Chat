@@ -1,6 +1,7 @@
 "use client";
 
 import Avatar from "@/app/component/Avatar";
+import AvatarGroup from "@/app/component/AvatarGroup";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import { Dialog, Transition } from "@headlessui/react";
 import { Conversation, User } from "@prisma/client";
@@ -86,7 +87,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
                       <div className="flex flex-col items-center">
                         <div className="mb-2">
-                          <Avatar user={otherUser} />
+                          {data.isGroup ? (
+                            <AvatarGroup users={data.user} />
+                          ) : (
+                            <Avatar user={otherUser} />
+                          )}
                         </div>
                         <div className="font-medium">{tittle}</div>
                         {!data.isGroup && (
@@ -110,6 +115,16 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
                         <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                           <div className="space-y-8 px-4 sm:space-y-6 sm:px-6">
+                            {data.isGroup && (
+                              <div className="text-base font-medium">
+                                Emails:
+                                <div className="mt-1 text-sm font-normal text-gray-600">
+                                  {data.user
+                                    .map((user) => user.email)
+                                    .join(", ")}
+                                </div>
+                              </div>
+                            )}
                             {!data.isGroup && (
                               <>
                                 <hr />

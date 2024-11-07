@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
 
     if (isGroup && (!members || members.length < 2 || !name)) {
-      return new NextResponse("Invalid data", { status: 400 });
+      return new NextResponse("Enter at least 2 members", { status: 400 });
     }
 
     if (isGroup) {
@@ -23,9 +23,9 @@ export async function POST(req: Request) {
           isGroup,
           user: {
             connect: [
-              ...members.map((member: { value: string }) => {
-                id: member.value;
-              }),
+              ...members.map((member: { value: string }) => ({
+                id: member.value,
+              })),
               {
                 id: currentUser.id,
               },
@@ -83,6 +83,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newConversation);
   } catch (error) {
+    console.log(error, "INternal error");
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
