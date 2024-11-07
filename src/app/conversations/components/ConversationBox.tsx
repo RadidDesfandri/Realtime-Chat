@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useCallback, useMemo } from "react";
 import Avatar from "@/app/component/Avatar";
 import { format } from "date-fns";
+import AvatarGroup from "@/app/component/AvatarGroup";
 
 interface ConversationBoxProps {
   data: FullConversationType;
@@ -70,7 +71,11 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         selected ? "bg-neutral-100" : "bg-white",
       )}
     >
-      <Avatar user={otherUser} />
+      {data.isGroup ? (
+        <AvatarGroup users={data.user} />
+      ) : (
+        <Avatar user={otherUser} />
+      )}
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">
           <div className="flex items-center justify-between">
