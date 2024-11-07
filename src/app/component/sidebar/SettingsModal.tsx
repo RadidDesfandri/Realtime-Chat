@@ -9,7 +9,10 @@ import toast from "react-hot-toast";
 import Modal from "../Modal";
 import Input from "../inputs/Input";
 import Image from "next/image";
-import { CldUploadButton } from "next-cloudinary";
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 import Button from "../Button";
 
 interface SettingsModalProps {
@@ -41,10 +44,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const image = watch("image");
 
-  const handleUpload = (result: any) => {
-    setValue("image", result?.info?.secure_url, {
-      shouldValidate: true,
-    });
+  const handleUpload = (result: CloudinaryUploadWidgetResults) => {
+    const secureUrl =
+      result.info && typeof result.info !== "string"
+        ? result.info.secure_url
+        : undefined;
+    if (secureUrl) {
+      setValue("image", secureUrl, { shouldValidate: true });
+    }
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
@@ -93,7 +100,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                     }
                     width={48}
                     height={48}
-                    className="rounded-full "
+                    className="rounded-full"
                   />
                   <CldUploadButton
                     options={{ maxFiles: 1 }}

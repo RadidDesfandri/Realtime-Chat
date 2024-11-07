@@ -2,12 +2,17 @@
 
 import ReactSelect from "react-select";
 
+interface Option {
+  label: string;
+  value: string | number;
+}
+
 interface SelectProps {
   disabled?: boolean;
-  value?: Record<string, any>;
+  value?: Option |  Option[];
   label: string;
-  onChange: (value: Record<string, any>) => void;
-  options: Record<string, any>[];
+  onChange: (value: Option | Option[]) => void;
+  options: Option[];
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -26,7 +31,7 @@ const Select: React.FC<SelectProps> = ({
         <ReactSelect
           isDisabled={disabled}
           value={value}
-          onChange={onChange}
+          onChange={(selectedOption) => onChange(selectedOption as Option |Option[])}
           isMulti
           options={options}
           menuPortalTarget={document.body}
@@ -38,7 +43,6 @@ const Select: React.FC<SelectProps> = ({
           }}
           classNames={{
             control: () => "text-sm ",
-            
           }}
         />
       </div>

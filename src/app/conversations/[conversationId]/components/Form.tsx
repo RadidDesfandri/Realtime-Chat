@@ -5,7 +5,10 @@ import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import MessageInput from "./MessageInput";
-import { CldUploadButton } from "next-cloudinary";
+import {
+  CldUploadButton,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
 
 const Form = () => {
   const { conversationId } = useConversation();
@@ -14,7 +17,7 @@ const Form = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: {},
   } = useForm<FieldValues>({
     defaultValues: {
       message: "",
@@ -29,9 +32,13 @@ const Form = () => {
     });
   };
 
-  const handleUpload = (result: any) => {
+  const handleUpload = (result: CloudinaryUploadWidgetResults) => {
+    const secureUrl =
+      result.info && typeof result.info !== "string"
+        ? result.info.secure_url
+        : undefined;
     axios.post("/api/message", {
-      image: result?.info?.secure_url,
+      image: secureUrl,
       conversationId,
     });
   };
@@ -56,7 +63,6 @@ const Form = () => {
         <MessageInput
           id="message"
           register={register}
-          errors={errors}
           required
           placeholder="Write a Message"
         />
