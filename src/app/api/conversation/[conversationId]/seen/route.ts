@@ -7,10 +7,14 @@ interface IParams {
   conversationId: string;
 }
 
-export async function POST(req: Request, { params }: { params: IParams }) {
+export async function POST(
+  req: Request,
+  context: { params: Promise<IParams> },
+) {
+  const { conversationId } = await context.params;
+
   try {
     const currentUser = await getCurrentUser();
-    const { conversationId } = await params;
 
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -31,7 +35,7 @@ export async function POST(req: Request, { params }: { params: IParams }) {
     });
 
     if (!conversation) {
-      return new NextResponse("Conversation notfound", { status: 400 });
+      return new NextResponse("Conversation not found", { status: 400 });
     }
 
     const lastMessage = conversation.messages[conversation.messages.length - 1];
@@ -62,7 +66,7 @@ export async function POST(req: Request, { params }: { params: IParams }) {
       messages: [updatedMessages],
     });
 
-    if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
+    if (lastMessage.seenIds.includes(currentUser.id)) {
       return NextResponse.json(conversation);
     }
 
@@ -71,11 +75,10 @@ export async function POST(req: Request, { params }: { params: IParams }) {
       "messages:update",
       updatedMessages,
     );
-    
 
     return NextResponse.json(updatedMessages);
   } catch (error) {
-    console.log(error, "ERORR_SEEN");
+    console.error(error, "ERROR_SEEN");
     return new NextResponse("Internal error", { status: 500 });
   }
 }
